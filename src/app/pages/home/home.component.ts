@@ -11,6 +11,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 })
 export class HomeComponent implements OnInit {
   public olympics$: Observable<any> = of(null);
+  public joCount!: number;
 
   public pieChartType: ChartType = 'pie';
   public pieChartData: ChartData<'pie'> = {
@@ -33,10 +34,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
+
     this.olympics$.subscribe((data) => {
       if (!data) {
         return;
       }
+      const allYears: number[] = data.flatMap((o: any) =>
+        o.participations.map((p: any) => p.year)
+      );
+
+      const uniqueYears = [...new Set(allYears)];
+
+      this.joCount = uniqueYears.length;
 
       const countries = data.map((olympic: any) => olympic.country);
 
@@ -51,11 +60,11 @@ export class HomeComponent implements OnInit {
               )
             ),
             backgroundColor: [
-              '#FF6384',
-              '#36A2EB',
-              '#FFCE56',
-              '#4BC0C0',
-              '#9966FF',
+              '#793D52',
+              '#89A1DB',
+              '#9780A1',
+              '#BFE0F1',
+              '#B8CBE7',
             ],
           },
         ],

@@ -1,0 +1,58 @@
+.container-home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  gap: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+.title-container {
+  h2 {
+    font-size: 2rem;
+    color: #343a40;
+    margin: 0;
+  }
+}
+
+.counter-container {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .jo-container,
+  .medals-container {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    min-width: 150px;
+
+    p:first-child {
+      font-weight: 600;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+    }
+
+    p:last-child {
+      font-size: 1.5rem;
+      color: #212529;
+      margin: 0;
+    }
+  }
+}
+
+.graph-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  width: 100%;
+  max-width: 500px;
+}
