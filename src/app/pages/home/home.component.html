@@ -1,8 +1,18 @@
-<h2>Olympic games app</h2>
-<hr />
-<p>{{ (olympics$ | async)?.[1].country }} data loaded</p>
+<div class="title-container">
+  <h2>Medals per Country</h2>
+</div>
 
-@for(olympic of (olympics$ | async); track olympic.id){
-<p>{{ olympic.country }}</p>
+<div class="counter-container">
+  <div class="jo-container">
+    <p>Number of JOs</p>
+    <p>10</p>
+  </div>
+  <div class="medals-container">
+    <p>Number of Countries</p>
+    <p>10</p>
+  </div>
+</div>
 
-}
+<div class="graph-container" style="display: block; width: 400px">
+  <canvas baseChart [data]="pieChartData" [type]="pieChartType"></canvas>
+</div>

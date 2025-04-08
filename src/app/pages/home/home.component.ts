@@ -12,6 +12,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 export class HomeComponent implements OnInit {
   public olympics$: Observable<any> = of(null);
 
+  public pieChartType: ChartType = 'pie';
   public pieChartData: ChartData<'pie'> = {
     labels: [],
     datasets: [
@@ -32,5 +33,33 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
+    this.olympics$.subscribe((data) => {
+      if (!data) {
+        return;
+      }
+
+      const countries = data.map((olympic: any) => olympic.country);
+
+      this.pieChartData = {
+        labels: countries,
+        datasets: [
+          {
+            data: data.map((o: any) =>
+              o.participations.reduce(
+                (acc: number, p: any) => acc + p.medalsCount,
+                0
+              )
+            ),
+            backgroundColor: [
+              '#FF6384',
+              '#36A2EB',
+              '#FFCE56',
+              '#4BC0C0',
+              '#9966FF',
+            ],
+          },
+        ],
+      };
+    });
   }
 }
