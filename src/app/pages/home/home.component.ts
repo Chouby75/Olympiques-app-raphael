@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, take } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
+import { olympic } from 'src/app/core/models/Olympic';
+import { Participation } from 'src/app/core/models/Participation';
 
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 
@@ -10,7 +12,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public olympics$: Observable<any> = of(null);
+  public olympics$: Observable<olympic[]> = of([]);
   public joCount!: number;
 
   public pieChartType: ChartType = 'pie';
@@ -35,27 +37,24 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.olympics$.subscribe((data) => {
-      if (!data) {
-        return;
-      }
-      const allYears: number[] = data.flatMap((o: any) =>
-        o.participations.map((p: any) => p.year)
+    this.olympics$.pipe(take(2)).subscribe((data) => {
+      const allYears: Date[] = data.flatMap((o: olympic) =>
+        o.participations.map((p: Participation) => p.year)
       );
 
       const uniqueYears = [...new Set(allYears)];
 
       this.joCount = uniqueYears.length;
 
-      const countries = data.map((olympic: any) => olympic.country);
+      const countries = data.map((olympic: olympic) => olympic.country);
 
       this.pieChartData = {
         labels: countries,
         datasets: [
           {
-            data: data.map((o: any) =>
+            data: data.map((o: olympic) =>
               o.participations.reduce(
-                (acc: number, p: any) => acc + p.medalsCount,
+                (acc: number, p: Participation) => acc + p.medalsCount,
                 0
               )
             ),
