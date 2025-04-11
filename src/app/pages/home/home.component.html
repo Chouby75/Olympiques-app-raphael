@@ -1,5 +1,5 @@
 <div class="container-home-page">
-  <div class="title-container">
+  <!-- <div class="title-container">
     <h2>Medals per Country</h2>
   </div>
 
@@ -12,7 +12,9 @@
       <p>Number of Countries</p>
       <p>{{ (olympics$ | async)?.length }}</p>
     </div>
-  </div>
+  </div> -->
+
+  <app-header></app-header>
 
   <div class="graph-container" style="display: block; width: 400px">
     <canvas baseChart [data]="pieChartData" [type]="pieChartType"></canvas>
