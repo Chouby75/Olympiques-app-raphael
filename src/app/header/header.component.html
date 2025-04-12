@@ -2,14 +2,12 @@
   <div class="title-container">
     <h2>Medals per Country</h2>
   </div>
+  <div class="counter-container">
+    <app-info-jo label="Number of JOs" value="{{ joCount }}" />
 
-  <!-- <div class="counter-container">
-    <div class="jo-container">
-      <p>Number of JOs</p>
-    </div>
-    <div class="medals-container">
-      <p>Number of Countries</p>
-    </div>
-  </div> -->
-  <app-info-jo></app-info-jo>
+    <app-info-jo
+      label="Number of coutries"
+      value="{{ (olympics$ | async)?.length }}"
+    />
+  </div>
 </header>

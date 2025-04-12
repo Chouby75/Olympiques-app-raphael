@@ -14,7 +14,7 @@
     </div>
   </div> -->
 
-  <app-header></app-header>
+  <app-header [olympics$]="olympics$"></app-header>
 
   <div class="graph-container" style="display: block; width: 400px">
     <canvas baseChart [data]="pieChartData" [type]="pieChartType"></canvas>

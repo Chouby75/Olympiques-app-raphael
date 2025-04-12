@@ -4,7 +4,7 @@ import { OlympicService } from 'src/app/core/services/olympic.service';
 import { olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 
-import { ChartData, ChartOptions, ChartType } from 'chart.js';
+import { ChartData, ChartOptions, ChartType, ChartEvent } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +13,7 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
 })
 export class HomeComponent implements OnInit {
   public olympics$: Observable<olympic[]> = of([]);
+  public coutryFocus!: string;
   public joCount!: number;
 
   public pieChartType: ChartType = 'pie';
