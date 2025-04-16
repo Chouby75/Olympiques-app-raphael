@@ -23,3 +23,25 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+
+.return-container {
+  position: absolute;
+  top: 5rem;
+  left: 5rem;
+}
+
+.return-button {
+  background-color: black;
+  color: white;
+  border: solid 1px black;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s ease-in-out;
+
+  &:hover {
+    background-color: transparent;
+    color: black;
+  }
+}

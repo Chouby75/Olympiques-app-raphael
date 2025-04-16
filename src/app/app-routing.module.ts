@@ -10,12 +10,12 @@ const routes: Routes = [
     component: HomeComponent,
   },
   {
-    path: '**', // wildcard
-    component: NotFoundComponent,
-  },
-  {
     path: 'details', // wildcard
     component: DetailsComponent,
+  },
+  {
+    path: '**', // wildcard
+    component: NotFoundComponent,
   },
 ];
 

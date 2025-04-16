@@ -7,9 +7,15 @@ import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { NgChartsModule } from 'ng2-charts';
 import { HeaderComponent } from './header/header.component';
+import { DetailsComponent } from './pages/details/details.component';
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, NotFoundComponent],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    NotFoundComponent,
+    DetailsComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

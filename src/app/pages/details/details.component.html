@@ -1,1 +1,11 @@
-<p>details works!</p>
+<div class="container-home-page">
+  <app-header
+    [dataHeader]="dataHeader"
+    [title]="countryFocus"
+    [isDetails]="true"
+  ></app-header>
+
+  <div class="graph-container" style="display: block; width: 400px">
+    <canvas baseChart [data]="pieChartData" [type]="pieChartType"></canvas>
+  </div>
+</div>

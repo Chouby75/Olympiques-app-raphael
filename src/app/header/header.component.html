@@ -1,13 +1,17 @@
 <header class="header-container">
+  @if(isDetails){
+  <div class="return-container">
+    <button class="return-button" onclick="window.history.back()">
+      Return
+    </button>
+  </div>
+  }
   <div class="title-container">
-    <h2>Medals per Country</h2>
+    <h2>{{ title }}</h2>
   </div>
   <div class="counter-container">
-    <app-info-jo label="Number of JOs" value="{{ joCount }}" />
-
-    <app-info-jo
-      label="Number of coutries"
-      value="{{ (olympics$ | async)?.length }}"
-    />
+    @for (item of dataHeader | keyvalue; track item.key) {
+    <app-info-jo label="Number of {{ item.key }}" value="{{ item.value }}" />
+    }
   </div>
 </header>

@@ -1,22 +1,12 @@
 <div class="container-home-page">
-  <!-- <div class="title-container">
-    <h2>Medals per Country</h2>
-  </div>
-
-  <div class="counter-container">
-    <div class="jo-container">
-      <p>Number of JOs</p>
-      <p>{{ joCount }}</p>
-    </div>
-    <div class="medals-container">
-      <p>Number of Countries</p>
-      <p>{{ (olympics$ | async)?.length }}</p>
-    </div>
-  </div> -->
-
-  <app-header [olympics$]="olympics$"></app-header>
+  <app-header [dataHeader]="dataHeader" title="Medals per country"></app-header>
 
   <div class="graph-container" style="display: block; width: 400px">
-    <canvas baseChart [data]="pieChartData" [type]="pieChartType"></canvas>
+    <canvas
+      baseChart
+      [data]="pieChartData"
+      [type]="pieChartType"
+      (chartClick)="onChartClick($event)"
+    ></canvas>
   </div>
 </div>
