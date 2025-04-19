@@ -1,4 +1,8 @@
 <div class="center">
+  @if(wrongCountry){
+  <h2>no {{ wrongCountry }} in database</h2>
+  }@else{
   <h2>No corresponding page found</h2>
+  }
   <a routerLink="">Go back</a>
 </div>

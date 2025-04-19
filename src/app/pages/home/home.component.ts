@@ -1,16 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, of, take } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, of, Subscription } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
-
-import {
-  ChartData,
-  ChartOptions,
-  ChartType,
-  ChartEvent,
-  Chart,
-} from 'chart.js';
+import { ChartData, ChartType } from 'chart.js';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,12 +11,15 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public olympics$: Observable<olympic[]> = of([]);
+  private subscription: Subscription = new Subscription();
+
   public dataHeader!: {
     jos: number;
     countries: number;
   };
+
   public coutryFocus!: string;
   public joCount!: number;
 
@@ -48,11 +44,8 @@ export class HomeComponent implements OnInit {
 
   public onChartClick(event: any): void {
     const chart = event.event.chart;
-    if (!chart) {
-      return;
-    }
+    if (!chart) return;
 
-    // Utilisation de getElementsAtEventForMode pour récupérer les éléments cliqués
     const activePoints = chart.getElementsAtEventForMode(
       event.event,
       'nearest',
@@ -60,15 +53,11 @@ export class HomeComponent implements OnInit {
       true
     );
 
-    // Si des éléments sont cliqués
     if (activePoints.length > 0) {
       const firstPoint = activePoints[0];
-
-      // Récupère le label et la valeur de l'élément cliqué
       const label = chart.data.labels[firstPoint.index];
-      const value = chart.data.datasets[0].data[firstPoint.index];
       this.router.navigate(['/details'], {
-        queryParams: { country: label }, // Ajout des paramètres de requête
+        queryParams: { country: label },
       });
     }
   }
@@ -76,16 +65,17 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.olympics$.pipe(take(2)).subscribe((data) => {
+    const olympicSub: Subscription = this.olympics$.subscribe((data) => {
       const allYears: Date[] = data.flatMap((o: olympic) =>
         o.participations.map((p: Participation) => p.year)
       );
 
-      const uniqueYears = [...new Set(allYears)];
-
+      const uniqueYears: Date[] = [...new Set(allYears)];
       this.joCount = uniqueYears.length;
 
-      const countries = data.map((olympic: olympic) => olympic.country);
+      const countries: string[] = data.map(
+        (olympic: olympic) => olympic.country
+      );
 
       this.dataHeader = {
         jos: this.joCount,
@@ -122,5 +112,11 @@ export class HomeComponent implements OnInit {
         ],
       };
     });
+
+    this.subscription.add(olympicSub);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe;
   }
 }

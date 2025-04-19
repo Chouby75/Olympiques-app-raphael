@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, of, take } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, of, Subscription } from 'rxjs';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
-import { ChartData, ChartOptions, ChartType, ChartEvent } from 'chart.js';
-
-import { ActivatedRoute } from '@angular/router';
+import { ChartData, ChartType } from 'chart.js';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   public olympics$: Observable<olympic[]> = of([]);
+  private subParams!: Subscription;
   public dataHeader!: {
     entries: number;
     medals: number;
@@ -29,7 +29,7 @@ export class DetailsComponent implements OnInit {
     labels: [],
     datasets: [
       {
-        data: [40, 20, 30, 10, 5],
+        data: [],
         backgroundColor: [
           '#FF6384',
           '#36A2EB',
@@ -41,22 +41,27 @@ export class DetailsComponent implements OnInit {
     ],
   };
 
+  private subscription: Subscription = new Subscription();
+
   constructor(
     private olympicService: OlympicService,
-    public route: ActivatedRoute
+    public route: ActivatedRoute,
+    public router: Router
   ) {}
 
   ngOnInit(): void {
     this.olympics$ = this.olympicService.getOlympics();
 
-    this.olympics$.pipe(take(2)).subscribe((data) => {
-      this.route.queryParams.subscribe((params) => {
+    const olympicSub: Subscription = this.olympics$.subscribe((data) => {
+      this.subParams = this.route.queryParams.subscribe((params) => {
         this.countryFocus = params['country'];
         const country = data.find(
           (country: olympic) => country.country === this.countryFocus
         );
         if (!country) {
-          console.error('Country not found in the data');
+          this.router.navigate(['/**'], {
+            queryParams: { country: this.countryFocus },
+          });
           return;
         }
         this.medalCount = country.participations.map(
@@ -65,20 +70,15 @@ export class DetailsComponent implements OnInit {
         this.allYears = country.participations.map(
           (p: Participation) => p.year
         );
-        const medalsCount = country.participations.map(
-          (p: Participation) => p.medalsCount
-        );
-        const medalsCountSum = medalsCount.reduce(
-          (accumulator: number, currentValue: number) =>
-            accumulator + currentValue,
+        const medalsCountSum = this.medalCount.reduce(
+          (acc, curr) => acc + curr,
           0
         );
         const athletesCount = country.participations.map(
           (p: Participation) => p.athleteCount
         );
         const athletesCountSum = athletesCount.reduce(
-          (accumulator: number, currentValue: number) =>
-            accumulator + currentValue,
+          (acc, curr) => acc + curr,
           0
         );
         this.dataHeader = {
@@ -86,24 +86,31 @@ export class DetailsComponent implements OnInit {
           medals: medalsCountSum,
           athletes: athletesCountSum,
         };
-      });
 
-      this.pieChartData = {
-        labels: this.allYears.flat(),
-        datasets: [
-          {
-            label: this.countryFocus,
-            data: this.medalCount,
-            backgroundColor: [
-              '#793D52',
-              '#89A1DB',
-              '#9780A1',
-              '#BFE0F1',
-              '#B8CBE7',
-            ],
-          },
-        ],
-      };
+        this.pieChartData = {
+          labels: this.allYears,
+          datasets: [
+            {
+              label: this.countryFocus,
+              data: this.medalCount,
+              backgroundColor: [
+                '#793D52',
+                '#89A1DB',
+                '#9780A1',
+                '#BFE0F1',
+                '#B8CBE7',
+              ],
+            },
+          ],
+        };
+      });
     });
+
+    this.subscription.add(olympicSub);
+    this.subscription.add(this.subParams);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
